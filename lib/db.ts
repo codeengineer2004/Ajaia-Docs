@@ -425,6 +425,7 @@ export function restoreVersion(docId: string, userId: string, versionId: string)
   const share = db.shares.find((item) => item.documentId === docId && item.userId === userId);
   if (doc.ownerId !== userId && share?.role !== 'editor') throw new Error('Permission denied: Only owners and editors can restore versions');
   const user = db.users.find((item) => item.id === userId) || SEEDED_USERS[0];
+  db.versions ||= [];
   db.versions.push({ id: `version-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`, documentId: docId, title: doc.title, contentHtml: doc.contentHtml, contentText: doc.contentText, createdAt: new Date().toISOString(), createdBy: user.id, createdByName: user.name });
   const restored = { ...doc, title: version.title, contentHtml: version.contentHtml, contentText: version.contentText, updatedAt: new Date().toISOString() };
   db.documents[docIndex] = restored;
